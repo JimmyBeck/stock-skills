@@ -1,0 +1,141 @@
+{
+  "stock": {
+    "code": "sh600900",
+    "name": "长江电力",
+    "market": "a"
+  },
+  "validation": {
+    "code": "sh600900",
+    "name": "长江电力",
+    "market": "a",
+    "exchange": "上海证券交易所",
+    "kline_available": true,
+    "kline_count_checked": 5,
+    "first_date_in_kline": "2020-01-02",
+    "last_trade_date": "2026-08-14",
+    "is_suspended": false,
+    "validated_at": "2026-08-16 16:30:00"
+  },
+  "storage": {
+    "type": "tdoc",
+    "options": {
+      "file_id": "<your-file-id>",
+      "sheet_quote": "<your-quote-sheet-id>",
+      "sheet_macd": "<your-macd-sheet-id>",
+      "tdocs_dir": "<path-to-tencent-docs-cli>"
+    }
+  },
+  "params": {
+    "eps": 1.4745,
+    "expected_div": 0.79
+  },
+  "sector": {
+    "name": "电力",
+    "secid": "90.BK0428",
+    "col": 4
+  },
+  "date_format": "iso",
+  "registry_snapshot": {
+    "registry_version": "2.0.0",
+    "snapshot_date": "2026-08-16",
+    "fields": ["close", "change"]
+  },
+  "fields": [
+    {
+      "field_id": "close",
+      "name": "收盘价",
+      "definition": "当日收盘价（A股15:00收盘价）",
+      "type": "采集",
+      "formula": null,
+      "unit": "元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 3,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {"qt_index": 3},
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "K线响应内嵌qt数组索引3"
+        },
+        {
+          "name": "K线历史",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 2,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {"kline_col": 2},
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "K线行索引2，用于历史数据"
+        }
+      ],
+      "computed": null,
+      "checks": [{"type": "non_null"}],
+      "applicability": {"market": ["a", "hk", "us"], "sector": null, "stock": null},
+      "registry_version": "1.0.0",
+      "enabled": true,
+      "on_fail": "skip_and_alert"
+    },
+    {
+      "field_id": "change",
+      "name": "涨跌额",
+      "definition": "收盘价 - 调整后前日收盘价；除权除息日需用 prev_close - expected_div 调整",
+      "type": "计算",
+      "formula": "close - adj_prev_close",
+      "unit": "元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "close - adj_prev_close，除权日 adj_prev_close = prev_close - expected_div"
+        }
+      ],
+      "computed": {"function": "diff", "params": {"base": "close", "ref": "prev_close"}},
+      "checks": [{"type": "cross_recompute"}],
+      "applicability": {"market": ["a"], "sector": null, "stock": null},
+      "registry_version": "1.0.0",
+      "enabled": true,
+      "on_fail": "skip_and_alert"
+    }
+  ],
+  "layout": {
+    "quote_sheet": [
+      "date", "close", "change", "change_pct", "sector_change_pct",
+      "market_cap", "circ_market_cap", "turnover", "turnover_rate",
+      "vol_ratio", "amplitude", "pe_static",
+      "trade_record_1", "trade_record_2", "trade_record_3", "trade_record_4"
+    ],
+    "macd_sheet": [
+      "date", "close", "turnover",
+      {"field": "macd_daily", "output": "DIFF"},
+      {"field": "macd_daily", "output": "DEA"},
+      {"field": "macd_daily", "output": "MACD"},
+      {"field": "macd_daily", "output": "ZERO"},
+      {"field": "macd_daily", "output": "CROSS"},
+      {"field": "macd_daily", "output": "MOMENTUM"},
+      {"field": "macd_weekly", "output": "DIFF"},
+      {"field": "macd_weekly", "output": "DEA"},
+      {"field": "macd_weekly", "output": "MACD"},
+      {"field": "macd_weekly", "output": "ZERO"},
+      {"field": "macd_weekly", "output": "CROSS"},
+      {"field": "macd_weekly", "output": "MOMENTUM"},
+      {"field": "macd_monthly", "output": "DIFF"},
+      {"field": "macd_monthly", "output": "DEA"},
+      {"field": "macd_monthly", "output": "MACD"},
+      {"field": "macd_monthly", "output": "ZERO"},
+      {"field": "macd_monthly", "output": "CROSS"},
+      {"field": "macd_monthly", "output": "MOMENTUM"}
+    ]
+  }
+}

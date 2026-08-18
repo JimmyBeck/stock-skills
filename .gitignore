@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 运行时产物（用户数据，不进仓库）
+data/
+*_config.json
+!assets/*_config.example.json
+
+# 系统文件
+.DS_Store

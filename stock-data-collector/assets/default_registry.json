@@ -1,0 +1,1626 @@
+{
+  "schema_version": "2.0.0",
+  "registry_version": "2.0.0",
+  "last_updated": "2026-08-17",
+  "fields": [
+    {
+      "field_id": "date",
+      "name": "日期",
+      "definition": "证券交易所官方交易日历日期",
+      "type": "采集",
+      "formula": null,
+      "unit": null,
+      "precision": null,
+      "sources": [
+        {
+          "name": "腾讯K线",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 0,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "kline_col": 0
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "YYYY-MM-DD格式，K线行索引0"
+        },
+        {
+          "name": "东财K线历史",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&beg=0&end=20500101",
+          "field_index": 0,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 0
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "klines行逗号分隔索引0；secid沪市1.code、深市0.code"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": "2026-08-10"
+        },
+        {
+          "date": "2026-08-11",
+          "value": "2026-08-11"
+        },
+        {
+          "date": "2026-08-12",
+          "value": "2026-08-12"
+        },
+        {
+          "date": "2026-08-13",
+          "value": "2026-08-13"
+        },
+        {
+          "date": "2026-08-14",
+          "value": "2026-08-14"
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a",
+          "hk",
+          "us"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-16",
+      "notes": "所有市场的交易日历均可从K线日期获取；2026-08-16实测腾讯/东财K线日期序列逐日一致（2026-08-10至08-14）",
+      "disambiguation_notes": null
+    },
+    {
+      "field_id": "close",
+      "name": "收盘价",
+      "definition": "当日收盘价（A股15:00收盘价）",
+      "type": "采集",
+      "formula": null,
+      "unit": "元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 3,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 3
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "K线响应内嵌qt数组索引3"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 3,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 3
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "备用源，HTTP非HTTPS"
+        },
+        {
+          "name": "K线历史",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 2,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "kline_col": 2
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "K线行索引2，用于历史数据"
+        },
+        {
+          "name": "新浪实时",
+          "url_template": "http://hq.sinajs.cn/list={code}",
+          "field_index": 3,
+          "encoding": "gbk",
+          "fetcher": "sina_rt",
+          "params": {
+            "index": 3
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "必须带Referer: https://finance.sina.com.cn否则403；逗号分隔索引3；2026-08-16实测28.100与腾讯一致"
+        },
+        {
+          "name": "东财K线历史",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&beg=0&end=20500101",
+          "field_index": 2,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 2
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "klines行索引2；2026-08-13收盘28.24与腾讯一致"
+        },
+        {
+          "name": "搜狐K线历史",
+          "url_template": "https://q.stock.sohu.com/hisHq?code=cn_{code6位}&start={YYYYMMDD}&end={YYYYMMDD}（日期倒序，%后缀已剥）",
+          "field_index": 2,
+          "encoding": "utf-8",
+          "fetcher": "sohu_kline",
+          "params": {
+            "kline_col": 2
+          },
+          "verified": true,
+          "verified_date": "2026-08-17"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 28.05
+        },
+        {
+          "date": "2026-08-11",
+          "value": 28.31
+        },
+        {
+          "date": "2026-08-12",
+          "value": 28.02
+        },
+        {
+          "date": "2026-08-13",
+          "value": 28.24
+        },
+        {
+          "date": "2026-08-14",
+          "value": 28.1
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a",
+          "hk",
+          "us"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "production",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-16",
+      "notes": "K线为前复权数据，MACD计算用前复权收盘价；样本值为2026-08-16从腾讯K线实测（probe_source.py --sample）",
+      "disambiguation_notes": null
+    },
+    {
+      "field_id": "change",
+      "name": "涨跌额",
+      "definition": "收盘价 - 调整后前日收盘价；除权除息日需用 prev_close - expected_div 调整",
+      "type": "计算",
+      "formula": "close - adj_prev_close",
+      "unit": "元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 31,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 31
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "正常日直接取；除权日需调整"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 31,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 31
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "2026-08-16实测与内嵌qt一致（-0.14）"
+        },
+        {
+          "name": "东财K线历史",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&beg=0&end=20500101",
+          "field_index": 9,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 9
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "klines行索引9；2026-08-10至08-14涨跌额与腾讯K线close差值逐日一致"
+        },
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "close - adj_prev_close，除权日 adj_prev_close = prev_close - expected_div；2026-08-16实测28.10-28.24=-0.14与qt[31]一致"
+        }
+      ],
+      "computed": {
+        "function": "diff",
+        "params": {
+          "base": "close",
+          "ref": "prev_close"
+        }
+      },
+      "checks": [
+        {
+          "type": "cross_recompute"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 0.3
+        },
+        {
+          "date": "2026-08-11",
+          "value": 0.26
+        },
+        {
+          "date": "2026-08-12",
+          "value": -0.29
+        },
+        {
+          "date": "2026-08-13",
+          "value": 0.22
+        },
+        {
+          "date": "2026-08-14",
+          "value": -0.14
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [
+        {
+          "scope": "hk",
+          "reason": "港/美股qt字段索引可能不同",
+          "sources": [],
+          "notes": "港/美股用K线推导: close - prev_close"
+        },
+        {
+          "scope": "us",
+          "reason": "同上",
+          "sources": [],
+          "notes": "同hk"
+        }
+      ],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-16",
+      "notes": "除权除息日检测: K线昨收 ≠ API昨收 时触发调整；样本值为2026-08-16实测（腾讯K线close逐日差值，与东财K线索引9一致）",
+      "disambiguation_notes": "除权日的涨跌额基准是调整后前收，不是原始前收"
+    },
+    {
+      "field_id": "change_pct",
+      "name": "涨跌%",
+      "definition": "涨跌额 / 调整后前日收盘价 × 100",
+      "type": "计算",
+      "formula": "change / adj_prev_close * 100",
+      "unit": "%",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 32,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 32
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "正常日直接取；除权日需重算"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 32,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 32
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "2026-08-16实测与内嵌qt一致（-0.50）"
+        },
+        {
+          "name": "东财K线历史",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&beg=0&end=20500101",
+          "field_index": 8,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 8
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "klines行索引8；2026-08-10至08-14与公式重算逐日一致"
+        },
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "change / adj_prev_close * 100；2026-08-16实测-0.14/28.24*100=-0.4958≈-0.50与qt[32]一致"
+        }
+      ],
+      "computed": {
+        "function": "pct_change",
+        "params": {
+          "base": "close",
+          "ref": "prev_close"
+        }
+      },
+      "checks": [
+        {
+          "type": "cross_recompute"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 1.08
+        },
+        {
+          "date": "2026-08-11",
+          "value": 0.93
+        },
+        {
+          "date": "2026-08-12",
+          "value": -1.02
+        },
+        {
+          "date": "2026-08-13",
+          "value": 0.79
+        },
+        {
+          "date": "2026-08-14",
+          "value": -0.5
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [
+        {
+          "scope": "hk",
+          "reason": "港/美股用K线推导",
+          "sources": [],
+          "notes": "change / prev_close * 100"
+        },
+        {
+          "scope": "us",
+          "reason": "同上",
+          "sources": [],
+          "notes": "同hk"
+        }
+      ],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-16",
+      "notes": "样本值为2026-08-16实测（公式重算，与东财K线索引8逐日一致）",
+      "disambiguation_notes": null
+    },
+    {
+      "field_id": "market_cap",
+      "name": "总市值",
+      "definition": "当日总市值（股价 × 总股本）",
+      "type": "采集",
+      "formula": null,
+      "unit": "亿元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 45,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 45
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "仅A股字段映射可靠"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 45,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 45
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "2026-08-16实测与内嵌qt一致（6875.57亿）"
+        },
+        {
+          "name": "东财实时",
+          "url_template": "https://push2.eastmoney.com/api/qt/stock/get?secid={secid}&fields=f43,f44,f45,f46,f47,f48,f57,f58,f60,f116,f117,f168,f170",
+          "field_index": null,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_rt",
+          "params": {
+            "field": "f116",
+            "scale": 1e-08
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "取f116字段，原始单位为元需÷1e8换算为亿元；2026-08-16实测687556917819.6元=6875.57亿与腾讯一致"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null",
+          "markets": [
+            "a"
+          ]
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": false,
+      "sample_values": [
+        {
+          "date": "2026-08-14",
+          "value": 6875.57
+        },
+        {
+          "date": "2026-08-17",
+          "value": 6836.42
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [
+        {
+          "scope": "hk",
+          "reason": "港/美股qt字段索引不同，需单独验证",
+          "sources": [],
+          "notes": "待调研"
+        },
+        {
+          "scope": "us",
+          "reason": "同上",
+          "sources": [],
+          "notes": "待调研"
+        }
+      ],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "走例外路径1（无历史信源字段）：① 多源当日交叉——2026-08-17 13:55 同步时点 腾讯K线内嵌qt[45]=腾讯qt[45]=东财f116=6836.42亿（现价27.94两源一致），三源完全一致；② 口径核算——总股本=f116/收盘价=244.68亿股，244.68亿×27.94=6836.42亿，与直采值一致；③ backfill_available:false 已标注，样本含2026-08-14收盘值与08-17盘中实测值。东财f116语义经中国移动(600941)反证确认：f116=20802.38亿≈总股本×价，f117=865.93亿≈A股流通9.03亿股×价。港/美股可能无法自动获取，需人工补填",
+      "disambiguation_notes": null
+    },
+    {
+      "field_id": "turnover_rate",
+      "name": "换手率",
+      "definition": "当日成交量 / 流通股本 × 100（腾讯qt口径，基于流通股本）",
+      "type": "采集",
+      "formula": null,
+      "unit": "%",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 38,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 38
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "基于流通股本计算，部分源用总股本，数值不同"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 38,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 38
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "2026-08-16实测与内嵌qt一致（0.30）"
+        },
+        {
+          "name": "东财K线历史",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&beg=0&end=20500101",
+          "field_index": 10,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 10
+          },
+          "verified": true,
+          "verified_date": "2026-08-16",
+          "notes": "klines行索引10（换手率%）；支持历史回溯；2026-08-14实测0.30与腾讯一致"
+        },
+        {
+          "name": "搜狐K线历史",
+          "url_template": "https://q.stock.sohu.com/hisHq?code=cn_{code6位}&start={YYYYMMDD}&end={YYYYMMDD}（日期倒序，%后缀已剥）",
+          "field_index": 9,
+          "encoding": "utf-8",
+          "fetcher": "sohu_kline",
+          "params": {
+            "kline_col": 9
+          },
+          "verified": true,
+          "verified_date": "2026-08-17"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null",
+          "markets": [
+            "a"
+          ]
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 0.49
+        },
+        {
+          "date": "2026-08-11",
+          "value": 0.45
+        },
+        {
+          "date": "2026-08-12",
+          "value": 0.28
+        },
+        {
+          "date": "2026-08-13",
+          "value": 0.31
+        },
+        {
+          "date": "2026-08-14",
+          "value": 0.3
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [
+        {
+          "scope": "hk",
+          "reason": "港/美股无法自动获取",
+          "sources": [],
+          "notes": "待调研"
+        },
+        {
+          "scope": "us",
+          "reason": "同上",
+          "sources": [],
+          "notes": "待调研"
+        }
+      ],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-16",
+      "notes": "注意：不同信源的换手率分母可能不同（流通股本 vs 总股本）；样本值为2026-08-16从东财K线实测，2026-08-14与腾讯qt[38]交叉一致（0.30）；原示例样本（08-13=0.15）与实测（0.31）不符已更正",
+      "disambiguation_notes": "消歧确认：基于流通股本，非总股本"
+    },
+    {
+      "field_id": "pe_static",
+      "name": "市盈率（静态）",
+      "definition": "收盘价 / 最近年报EPS",
+      "type": "计算",
+      "formula": "close / eps",
+      "unit": "倍",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "close / config[params][eps]，EPS每季度财报后手动更新；2026-08-17用EPS_2025=1.4745重算5天样本自洽"
+        },
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 39,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 39
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "qt[39]实测为静态PE口径：2026-08-17=18.95=现价27.94/EPS_2025(1.4745)；旁证交叉源，非独立信源（同一公式的另一实现）"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 39,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 39
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "2026-08-17实测与内嵌qt一致（18.95）；qt[46]=3.28已排除（量级为PB，非PE）"
+        },
+        {
+          "name": "东财实时",
+          "url_template": "https://push2.eastmoney.com/api/qt/stock/get?secid={secid}&fields=f43,f57,f58,f116,f117,f162,f163,f164",
+          "field_index": null,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_rt",
+          "params": {
+            "field": "f164",
+            "scale": 0.01
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "f164原始值×100需×0.01还原；2026-08-17实测f164=18.95=现价/EPS_2025，与腾讯qt[39]同步一致；f162=动态PE、f163=TTM PE（推断），均非静态口径"
+        }
+      ],
+      "computed": {
+        "function": "pe_static",
+        "params": {
+          "base": "close",
+          "eps_param": "eps"
+        }
+      },
+      "checks": [
+        {
+          "type": "cross_recompute"
+        }
+      ],
+      "update_frequency": "每交易日（EPS每季度更新）",
+      "available_after": "T日15:30",
+      "backfill_available": false,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 19.02
+        },
+        {
+          "date": "2026-08-11",
+          "value": 19.2
+        },
+        {
+          "date": "2026-08-12",
+          "value": 19.0
+        },
+        {
+          "date": "2026-08-13",
+          "value": 19.15
+        },
+        {
+          "date": "2026-08-14",
+          "value": 19.06
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a",
+          "hk",
+          "us"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": false,
+      "status": "deprecated",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "【已废弃】2026-08-17 起口径切换为 PE-TTM（见 pe_ttm 条目）。历史数据为静态口径（close/EPS_2025），与TTM不可混用。走例外路径2（计算型字段）：① 输入close已经腾讯/东财K线双源一致（见close条目）；② 2026-08-17用EPS_2025=1.4745重算5天样本（close/1.4745）自洽；③ 公式pe_static已注册。旁证交叉：2026-08-17 13:55同步时点 腾讯qt[39]=东财f164=重算值=18.95（现价27.94）。静态PE用最近年报EPS，非动态PE/TTM；EPS为per-stock参数，在config中配置（config[params][eps]），每季度财报后手动更新",
+      "disambiguation_notes": "消歧确认：静态PE（非动态/TTM），用最近年报EPS"
+    },
+    {
+      "field_id": "pe_ttm",
+      "name": "市盈率（TTM）",
+      "definition": "收盘价 / 最近四季滚动EPS（TTM口径，由信源方计算提供）",
+      "type": "采集",
+      "formula": null,
+      "unit": "倍",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 53,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 53
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "qt[53]实测为PE-TTM口径：2026-08-17=19.83，与东财f163同步一致"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 53,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 53
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "2026-08-17实测与内嵌qt一致（19.83）"
+        },
+        {
+          "name": "东财实时",
+          "url_template": "https://push2.eastmoney.com/api/qt/stock/get?secid={secid}&fields=f43,f57,f58,f116,f117,f162,f163,f164",
+          "field_index": null,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_rt",
+          "params": {
+            "field": "f163",
+            "scale": 0.01
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "f163原始值×100需×0.01还原；2026-08-17实测f163=1983→19.83=PE-TTM，与腾讯qt[53]一致；f162=动态PE、f164=静态PE，均非TTM口径"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null",
+          "markets": [
+            "a"
+          ]
+        }
+      ],
+      "update_frequency": "每交易日（TTM随季报滚动）",
+      "available_after": "T日15:30",
+      "backfill_available": false,
+      "sample_values": [
+        {
+          "date": "2026-08-17",
+          "value": 19.83
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "走例外路径1（无历史信源字段）：① 2026-08-17盘中 腾讯qt[53]=东财f163(×0.01)=19.83 双源一致；② 核算 EPS_TTM≈27.96/19.83=1.410 与2025年报EPS 1.4745 量级合理（TTM滚动）；③ 当日实测样本19.83（盘中值，收盘后自然更新）。TTM口径由信源方计算，主备源间可能因财报更新时点不同出现短暂偏差，交叉验证阈值应放宽（建议±0.2），不可按0.01卡。历史不可回填（实时源无历史PE-TTM）；f162=动态PE、f164=静态PE已实测排除",
+      "disambiguation_notes": "消歧确认：PE-TTM（滚动四季），非静态/动态；由信源直采，无需config配EPS"
+    },
+    {
+      "field_id": "macd_daily",
+      "name": "日线MACD",
+      "definition": "EMA(12)-EMA(26)为DIFF，EMA(DIFF,9)为DEA，MACD柱=2×(DIFF-DEA)。【价格基础：不复权（可经口径变更流程切换前复权变体）】",
+      "type": "计算",
+      "formula": "DIFF=EMA(close,12)-EMA(close,26); DEA=EMA(DIFF,9); MACD=2*(DIFF-DEA)",
+      "unit": "元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "基于前复权K线收盘价序列计算，需≥1500条确保EMA收敛；2026-08-17用collector lib/common.py标准EMA从2001条腾讯K线重算复核，5天样本自洽"
+        }
+      ],
+      "computed": {
+        "function": "macd",
+        "params": {
+          "period": "daily"
+        }
+      },
+      "checks": [
+        {
+          "type": "cross_recompute"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": "DIFF=0.08, DEA=0.25, MACD=-0.36"
+        },
+        {
+          "date": "2026-08-11",
+          "value": "DIFF=0.07, DEA=0.22, MACD=-0.30"
+        },
+        {
+          "date": "2026-08-12",
+          "value": "DIFF=0.04, DEA=0.18, MACD=-0.28"
+        },
+        {
+          "date": "2026-08-13",
+          "value": "DIFF=0.04, DEA=0.15, MACD=-0.23"
+        },
+        {
+          "date": "2026-08-14",
+          "value": "DIFF=0.02, DEA=0.13, MACD=-0.21"
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a",
+          "hk",
+          "us"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "【口径】平安证券·不复权收盘价输入，周/月线由日线聚合（含未完结周期）；2026-08-17 中国海油/长江电力锚点与平安证券逐位吻合。走例外路径2（计算型字段）：① 输入前复权close已经腾讯/东财K线双源一致（见close条目）；② 2026-08-17用collector lib/common.py标准EMA（首值播种）从2001条腾讯前复权K线重算，最近5天样本逐日自洽（如08-14 DIFF=0.0208/DEA=0.1270/MACD=-0.2124）；③ 公式macd已注册。MACD柱系数为2，不是简单的DIFF-DEA",
+      "disambiguation_notes": "消歧确认：MACD柱=2×(DIFF-DEA)，非DIFF-DEA"
+    },
+    {
+      "field_id": "sector_change_pct",
+      "name": "板块参照涨跌%",
+      "definition": "所属行业板块当日涨跌幅%",
+      "type": "采集",
+      "formula": null,
+      "unit": "%",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "东方财富板块行情",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=0&beg={YYYYMMDD}&end={YYYYMMDD}",
+          "field_index": 8,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 8,
+            "fqt": 0,
+            "secid_from_config": "sector.secid"
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "klines行逗号分隔取索引8；secid为per-stock参数（如90.BK0428=电力）；2026-08-17实测东财WAF已恢复，取得5天样本"
+        },
+        {
+          "name": "东方财富板块实时",
+          "url_template": "https://push2.eastmoney.com/api/qt/stock/get?secid={secid}&fields=f43,f57,f58,f60,f170",
+          "field_index": null,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_rt",
+          "params": {
+            "field": "f170",
+            "scale": 0.01,
+            "secid_from_config": "sector.secid"
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "f170原始值×100需×0.01还原；2026-08-17盘中实测BK0428 f170=-0.11%（13:57 push2delay快照）与K线当日行col8=-0.18%（稍后快照）时点不同属盘中波动，收盘后两口径一致；与东财K线同厂商不同端点"
+        }
+      ],
+      "computed": null,
+      "checks": [],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 1.37
+        },
+        {
+          "date": "2026-08-11",
+          "value": -0.11
+        },
+        {
+          "date": "2026-08-12",
+          "value": -0.05
+        },
+        {
+          "date": "2026-08-13",
+          "value": 0.39
+        },
+        {
+          "date": "2026-08-14",
+          "value": -2.65
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "2026-08-17实测：东财WAF封禁已恢复（push2his个股/板块K线均可用；push2实时间歇RemoteDisconnected需回退push2delay）。样本为BK0428（电力）K线col8实测5天；两源同属东财（历史K线端点+实时端点），已注明。secid为per-stock参数，需在config中配置（config[sector][secid]）",
+      "disambiguation_notes": "板块参照用东财secid（如BK0428=电力），非申万行业分类"
+    },
+    {
+      "field_id": "circ_market_cap",
+      "name": "流通市值",
+      "definition": "当日流通市值（收盘价 × 流通股本）",
+      "type": "采集",
+      "formula": null,
+      "unit": "亿元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 44,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 44
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "仅A股字段映射可靠；2026-08-17实测6836.42亿与腾讯qt一致"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 44,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 44
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "2026-08-17 13:55同步时点实测6836.42亿与内嵌qt、东财f117完全一致"
+        },
+        {
+          "name": "东财实时",
+          "url_template": "https://push2.eastmoney.com/api/qt/stock/get?secid={secid}&fields=f43,f57,f58,f116,f117",
+          "field_index": null,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_rt",
+          "params": {
+            "field": "f117",
+            "scale": 1e-08
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "f117原始单位为元需×1e-8换算亿元；f117=流通市值语义经中国移动(600941)反证确认：f117=865.93亿≈A股流通9.03亿股×价，f116=20802.38亿=总市值"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null",
+          "markets": [
+            "a"
+          ]
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": false,
+      "sample_values": [
+        {
+          "date": "2026-08-17",
+          "value": 6836.42
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [
+        {
+          "scope": "hk",
+          "reason": "港/美股qt字段索引不同，需单独验证",
+          "sources": [],
+          "notes": "待调研"
+        },
+        {
+          "scope": "us",
+          "reason": "同上",
+          "sources": [],
+          "notes": "待调研"
+        }
+      ],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "走例外路径1（无历史信源字段）：① 多源当日交叉——2026-08-17 13:55同步时点 腾讯内嵌qt[44]=腾讯qt[44]=东财f117=6836.42亿，三源一致；② 口径核算——流通股本=f117/收盘价=244.68亿股（长江电力已全流通，故与总股本一致；区分案例见中国移动取证），×27.94=6836.42亿与直采一致；③ backfill_available:false 已标注，样本为08-17盘中实测",
+      "disambiguation_notes": "长江电力已全流通，流通市值=总市值；语义区分验证用中国移动（流通盘9.03亿股 vs 总股本216.87亿股）"
+    },
+    {
+      "field_id": "turnover",
+      "name": "交易额",
+      "definition": "当日成交金额（元换算为亿元）",
+      "type": "采集",
+      "formula": null,
+      "unit": "亿元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 35,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 35,
+            "segment": 2,
+            "scale": 1e-08
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "qt[35]为'万/亿/元'复合格式，segment:2取元数值，×1e-8换算亿元；仅当日有效"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 35,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 35,
+            "segment": 2,
+            "scale": 1e-08
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "2026-08-17 13:55同步时点实测15.1890亿与东财f48完全一致"
+        },
+        {
+          "name": "东财K线历史",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&beg=0&end=20500101",
+          "field_index": 6,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 6,
+            "scale": 1e-08
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "klines行索引6（成交额，元），×1e-8换算亿元；支持历史回溯；当日行与东财实时f48一致（14.87亿 vs f48=1486554421元）"
+        },
+        {
+          "name": "搜狐K线历史",
+          "url_template": "https://q.stock.sohu.com/hisHq?code=cn_{code6位}&start={YYYYMMDD}&end={YYYYMMDD}（日期倒序，%后缀已剥）",
+          "field_index": 8,
+          "encoding": "utf-8",
+          "fetcher": "sohu_kline",
+          "params": {
+            "kline_col": 8,
+            "scale": 0.0001
+          },
+          "verified": true,
+          "verified_date": "2026-08-17"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null",
+          "markets": [
+            "a"
+          ]
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 33.22
+        },
+        {
+          "date": "2026-08-11",
+          "value": 30.88
+        },
+        {
+          "date": "2026-08-12",
+          "value": 19.32
+        },
+        {
+          "date": "2026-08-13",
+          "value": 21.49
+        },
+        {
+          "date": "2026-08-14",
+          "value": 20.67
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [
+        {
+          "scope": "hk",
+          "reason": "港/美股成交额列位置与单位需单独验证",
+          "sources": [],
+          "notes": "待调研"
+        },
+        {
+          "scope": "us",
+          "reason": "同上",
+          "sources": [],
+          "notes": "待调研"
+        }
+      ],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "样本为2026-08-17从东财K线col6实测（元÷1e8）；当日交叉：腾讯qt[35]seg2=东财f48=15.1890亿（13:55同步时点）；腾讯A股日K无成交额历史列，历史取东财K线",
+      "disambiguation_notes": null
+    },
+    {
+      "field_id": "vol_ratio",
+      "name": "量比",
+      "definition": "当日累计成交量 / (过去5日平均每分钟成交量 × 当日累计交易分钟数)",
+      "type": "采集",
+      "formula": null,
+      "unit": "倍",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 49,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 49
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "仅A股字段映射可靠；2026-08-17实测与腾讯qt一致（0.83）"
+        },
+        {
+          "name": "腾讯实时",
+          "url_template": "http://qt.gtimg.cn/q={code}",
+          "field_index": 49,
+          "encoding": "gbk",
+          "fetcher": "tencent_qt",
+          "params": {
+            "index": 49
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "2026-08-17实测0.83（13:55）；东财实时端点请求f10不返回，未找到东财量比字段"
+        }
+      ],
+      "computed": null,
+      "checks": [
+        {
+          "type": "non_null",
+          "markets": [
+            "a"
+          ]
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": false,
+      "sample_values": [
+        {
+          "date": "2026-08-17",
+          "value": 0.83
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [
+        {
+          "scope": "hk",
+          "reason": "港/美股qt字段索引不同，需单独验证",
+          "sources": [],
+          "notes": "待调研"
+        },
+        {
+          "scope": "us",
+          "reason": "同上",
+          "sources": [],
+          "notes": "待调研"
+        }
+      ],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "走例外路径1（无历史信源字段）：① 多源当日交叉——2026-08-17腾讯内嵌qt[49]=腾讯qt[49]=0.83（两源同属腾讯行情feed，已注明）；② 口径核算——按量比定义用K线成交量重算：当日量531256手/(前5日均量894619.4手/240分×175分)≈0.81，与直采0.83偏差<0.1阈值（盘中分钟数估算所致）；③ backfill_available:false 已标注，样本为08-17盘中实测",
+      "disambiguation_notes": null
+    },
+    {
+      "field_id": "amplitude",
+      "name": "振幅%",
+      "definition": "(最高价 - 最低价) / 调整后前日收盘价 × 100；除权除息日需用 prev_close - expected_div 调整",
+      "type": "计算",
+      "formula": "(high - low) / adj_prev_close * 100",
+      "unit": "%",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "(high-low)/adj_prev_close×100，prev_close为内建衍生输入；2026-08-17用腾讯K线高低收重算5天样本自洽"
+        },
+        {
+          "name": "腾讯K线内嵌qt",
+          "url_template": "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={code},day,,,2000,",
+          "field_index": 43,
+          "encoding": "utf-8",
+          "fetcher": "tencent_kline",
+          "params": {
+            "qt_index": 43
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "仅交叉参考，口径以计算为准；2026-08-17实测qt[43]=0.85与公式重算(28.15-27.91)/28.10×100=0.85一致"
+        },
+        {
+          "name": "东财K线历史",
+          "url_template": "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&klt=101&fqt=1&beg=0&end=20500101",
+          "field_index": 7,
+          "encoding": "utf-8",
+          "fetcher": "eastmoney_kline",
+          "params": {
+            "kline_col": 7
+          },
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "仅交叉参考，口径以计算为准；2026-08-10至08-14与公式重算逐日一致（2.31/1.57/1.20/1.57/0.99）"
+        }
+      ],
+      "computed": {
+        "function": "amplitude",
+        "params": {}
+      },
+      "checks": [
+        {
+          "type": "cross_recompute"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": 2.31
+        },
+        {
+          "date": "2026-08-11",
+          "value": 1.57
+        },
+        {
+          "date": "2026-08-12",
+          "value": 1.2
+        },
+        {
+          "date": "2026-08-13",
+          "value": 1.57
+        },
+        {
+          "date": "2026-08-14",
+          "value": 0.99
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "走例外路径2（计算型字段）：① 输入high/low/prev_close已经腾讯/东财K线双源一致（见close条目）；② 2026-08-17用公式从腾讯K线重算5天样本，与东财K线col7旁证逐日一致；③ 公式amplitude已注册。除权除息日prev_close需按expected_div调整（同change/change_pct机制）",
+      "disambiguation_notes": "振幅分母为调整后前收，非今开；qt[43]直采值仅作交叉参考，口径以计算为准"
+    },
+    {
+      "field_id": "macd_weekly",
+      "name": "周线MACD",
+      "definition": "按周聚合收盘价序列的EMA(12,26,9)：DIFF=EMA12-EMA26，DEA=EMA(DIFF,9)，MACD柱=2×(DIFF-DEA)；未完成周以当日收盘价作临时周收盘（provisional close）。【价格基础：不复权（可经口径变更流程切换前复权变体）】",
+      "type": "计算",
+      "formula": "DIFF=EMA(weekly_close,12)-EMA(weekly_close,26); DEA=EMA(DIFF,9); MACD=2*(DIFF-DEA)",
+      "unit": "元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "基于前复权日K收盘价按ISO周聚合（周收盘=该周最后交易日收盘），滚动provisional close法逐日重算；2026-08-17用collector lib/common.py从2001条腾讯K线重算复核"
+        }
+      ],
+      "computed": {
+        "function": "macd",
+        "params": {
+          "period": "weekly"
+        }
+      },
+      "checks": [
+        {
+          "type": "cross_recompute"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": "DIFF=0.26, DEA=0.13, MACD=0.28"
+        },
+        {
+          "date": "2026-08-11",
+          "value": "DIFF=0.28, DEA=0.13, MACD=0.31"
+        },
+        {
+          "date": "2026-08-12",
+          "value": "DIFF=0.26, DEA=0.13, MACD=0.27"
+        },
+        {
+          "date": "2026-08-13",
+          "value": "DIFF=0.28, DEA=0.13, MACD=0.30"
+        },
+        {
+          "date": "2026-08-14",
+          "value": "DIFF=0.27, DEA=0.13, MACD=0.28"
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a",
+          "hk",
+          "us"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "【口径】平安证券·不复权收盘价输入，周/月线由日线聚合（含未完结周期）；2026-08-17 中国海油/长江电力锚点与平安证券逐位吻合。走例外路径2（计算型字段）：① 输入前复权close已经腾讯/东财K线双源一致（见close条目）；② 2026-08-17用calc_rolling_macd_provisional(get_week_key)从2001条腾讯K线重算，最近5天样本（2026-W33周）逐日自洽（如08-14 DIFF=0.2682/DEA=0.1263/MACD=0.2837）；③ 公式macd已注册。输出6列：DIFF/DEA/MACD/ZERO/CROSS/MOMENTUM（layout按对象引用）；周内逐日值随当周临时收盘变动，周五收盘后定稿",
+      "disambiguation_notes": "消歧确认：周MACD用周收盘序列（非日序列直接套参数）；未完成周用provisional close"
+    },
+    {
+      "field_id": "macd_monthly",
+      "name": "月线MACD",
+      "definition": "按月聚合收盘价序列的EMA(12,26,9)：DIFF=EMA12-EMA26，DEA=EMA(DIFF,9)，MACD柱=2×(DIFF-DEA)；未完成月以当日收盘价作临时月收盘（provisional close）。【价格基础：不复权（可经口径变更流程切换前复权变体）】",
+      "type": "计算",
+      "formula": "DIFF=EMA(monthly_close,12)-EMA(monthly_close,26); DEA=EMA(DIFF,9); MACD=2*(DIFF-DEA)",
+      "unit": "元",
+      "precision": 2,
+      "sources": [
+        {
+          "name": "计算",
+          "url_template": null,
+          "field_index": null,
+          "encoding": null,
+          "fetcher": null,
+          "params": null,
+          "verified": true,
+          "verified_date": "2026-08-17",
+          "notes": "基于前复权日K收盘价按月聚合（月收盘=该月最后交易日收盘），滚动provisional close法逐日重算；2026-08-17用collector lib/common.py从2001条腾讯K线重算复核"
+        }
+      ],
+      "computed": {
+        "function": "macd",
+        "params": {
+          "period": "monthly"
+        }
+      },
+      "checks": [
+        {
+          "type": "cross_recompute"
+        }
+      ],
+      "update_frequency": "每交易日收盘后",
+      "available_after": "T日15:30",
+      "backfill_available": true,
+      "sample_values": [
+        {
+          "date": "2026-08-10",
+          "value": "DIFF=0.40, DEA=0.54, MACD=-0.28"
+        },
+        {
+          "date": "2026-08-11",
+          "value": "DIFF=0.42, DEA=0.55, MACD=-0.25"
+        },
+        {
+          "date": "2026-08-12",
+          "value": "DIFF=0.40, DEA=0.54, MACD=-0.29"
+        },
+        {
+          "date": "2026-08-13",
+          "value": "DIFF=0.42, DEA=0.55, MACD=-0.26"
+        },
+        {
+          "date": "2026-08-14",
+          "value": "DIFF=0.41, DEA=0.55, MACD=-0.28"
+        }
+      ],
+      "cross_validated": true,
+      "applicability": {
+        "market": [
+          "a",
+          "hk",
+          "us"
+        ],
+        "sector": null,
+        "stock": null
+      },
+      "overrides": [],
+      "ready_for_production": true,
+      "status": "verified",
+      "registry_version": "1.0.0",
+      "last_verified_date": "2026-08-17",
+      "notes": "【历史深度需求】月线 EMA 需全历史（上市以来）才能充分收敛；采集端以腾讯2000条+搜狐前补满足，搜狐不可用时末位可能有±0.01偏差。【口径】平安证券·不复权收盘价输入，周/月线由日线聚合（含未完结周期）；2026-08-17 中国海油/长江电力锚点与平安证券逐位吻合。走例外路径2（计算型字段）：① 输入前复权close已经腾讯/东财K线双源一致（见close条目）；② 2026-08-17用calc_rolling_macd_provisional(get_month_key)从2001条腾讯K线重算，最近5天样本（2026-08月）逐日自洽（如08-14 DIFF=0.4060/DEA=0.5453/MACD=-0.2785）；③ 公式macd已注册。输出6列：DIFF/DEA/MACD/ZERO/CROSS/MOMENTUM（layout按对象引用）；月内逐日值随当月临时收盘变动，月末收盘后定稿",
+      "disambiguation_notes": "消歧确认：月MACD用月收盘序列；未完成月用provisional close"
+    }
+  ],
+  "_note": "内置演示字段集：由 stock-field-registry/assets/field_library.json 同步而来，源头以后者为准。onboard_stock.py 未指定 --registry 且找不到同安装字段库时回退使用。同步日期 2026-08-19。"
+}

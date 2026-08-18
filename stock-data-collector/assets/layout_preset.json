@@ -1,0 +1,98 @@
+{
+  "_comment": "列布局预设模板（原16列行情/21列MACD布局的 preset 化）。onboard_stock 生成 config 时拷贝本模板进 config.layout；update_daily 按 layout 组装行。元素 = field_id 字符串（单列）或 {field, output}（多列输出字段的一列）。layout 引用但未接入 config.fields 的字段列留空（如板块参照由自动化补填、交易记录人工填写）。",
+  "quote_sheet": [
+    "date",
+    "close",
+    "change",
+    "change_pct",
+    "sector_change_pct",
+    "market_cap",
+    "circ_market_cap",
+    "turnover",
+    "turnover_rate",
+    "vol_ratio",
+    "amplitude",
+    "pe_ttm",
+    "trade_record_1",
+    "trade_record_2",
+    "trade_record_3",
+    "trade_record_4"
+  ],
+  "macd_sheet": [
+    "date",
+    "close",
+    "turnover",
+    {
+      "field": "macd_daily",
+      "output": "DIFF"
+    },
+    {
+      "field": "macd_daily",
+      "output": "DEA"
+    },
+    {
+      "field": "macd_daily",
+      "output": "MACD"
+    },
+    {
+      "field": "macd_daily",
+      "output": "ZERO"
+    },
+    {
+      "field": "macd_daily",
+      "output": "CROSS"
+    },
+    {
+      "field": "macd_daily",
+      "output": "MOMENTUM"
+    },
+    {
+      "field": "macd_weekly",
+      "output": "DIFF"
+    },
+    {
+      "field": "macd_weekly",
+      "output": "DEA"
+    },
+    {
+      "field": "macd_weekly",
+      "output": "MACD"
+    },
+    {
+      "field": "macd_weekly",
+      "output": "ZERO"
+    },
+    {
+      "field": "macd_weekly",
+      "output": "CROSS"
+    },
+    {
+      "field": "macd_weekly",
+      "output": "MOMENTUM"
+    },
+    {
+      "field": "macd_monthly",
+      "output": "DIFF"
+    },
+    {
+      "field": "macd_monthly",
+      "output": "DEA"
+    },
+    {
+      "field": "macd_monthly",
+      "output": "MACD"
+    },
+    {
+      "field": "macd_monthly",
+      "output": "ZERO"
+    },
+    {
+      "field": "macd_monthly",
+      "output": "CROSS"
+    },
+    {
+      "field": "macd_monthly",
+      "output": "MOMENTUM"
+    }
+  ]
+}
