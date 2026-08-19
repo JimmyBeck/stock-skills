@@ -15,6 +15,9 @@
 - 凌晨/周末运行时，最新交易日的实时字段（市值/流通市值/量比/PE-TTM）被误判为历史而留空——实时源使用条件从"目标日=今天"修正为"目标日=最新K线日"
 - verify_demo 凌晨/非交易时段运行挂起（写入步骤改用 --days 1 锚定最近交易日）
 
+### Added
+- AGENTS.md（agent 自动加载的项目规矩：验收门槛/文档同步/提交规范）、GitHub Actions CI（push 自动体检：编译+JSON+关键文件+schema 不变式）、Issue 反馈模板、README 免责声明、CONTRIBUTING 新电脑起手引导词
+
 ### Changed
 - MACD 口径归属澄清：口径定义归 Skill 1（可变决策），Skill 2 仅按 registry 执行；registry macd 条目显式声明价格基础与月线历史深度需求
 

@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  sanity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python 语法编译检查
+        run: find . -name "*.py" -print0 | xargs -0 python3 -m py_compile
+
+      - name: JSON 合法性校验（字段库/配置模板/布局预设）
+        run: |
+          python3 - <<'EOF'
+          import json, glob, sys
+          targets = glob.glob("**/*.json", recursive=True)
+          assert targets, "未找到任何 json 文件"
+          for p in targets:
+              with open(p, encoding="utf-8") as f:
+                  json.load(f)
+          print(f"OK: {len(targets)} 个 JSON 文件全部合法")
+          EOF
+
+      - name: 关键文件存在性检查
+        run: |
+          test -f BOUNDARY.md && test -f README.md && test -f AGENTS.md \
+            && test -f stock-field-registry/SKILL.md \
+            && test -f stock-data-collector/SKILL.md \
+            && test -f stock-field-registry/assets/field_library.json \
+            && test -x verify_demo.sh \
+            && echo "OK: 关键文件齐备"
+
+      - name: registry schema 不变式检查（采集型必带 fetcher，计算型必带 computed）
+        run: |
+          python3 - <<'EOF'
+          import json
+          lib = json.load(open("stock-field-registry/assets/field_library.json", encoding="utf-8"))
+          bad = []
+          for f in lib["fields"]:
+              if f.get("status") == "deprecated":
+                  continue
+              if f.get("type") == "计算" and not f.get("computed"):
+                  bad.append(f["field_id"] + "（计算型缺 computed）")
+              if f.get("type") == "采集":
+                  if not any(s.get("fetcher") for s in f.get("sources", [])):
+                      bad.append(f["field_id"] + "（采集型无可用 fetcher 源）")
+          if bad:
+              print("FAIL:", bad); sys.exit(1)
+          print(f"OK: {len(lib['fields'])} 个字段条目不变式通过")
+          EOF

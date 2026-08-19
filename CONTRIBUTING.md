@@ -15,6 +15,14 @@
 **3. 新增计算公式**（注册一个函数）
 - 在 `stock-data-collector/scripts/computed/` 注册新函数；受控名单制，禁止 eval
 
+## 给维护者：新电脑起手
+
+换电脑后，给新 agent 发这段话即可：
+
+> 我有一个开源项目 https://github.com/JimmyBeck/stock-skills 。请 clone 到本地，先读 AGENTS.md、README.md、docs/PRD.md 和 BOUNDARY.md 了解项目与迭代规矩，然后按 README 把两个 skill 安装到你的 skill 目录。
+
+AGENTS.md 会被 agent 自动加载，迭代规矩（验收门槛、文档同步、提交规范）无需重复交代。
+
 ## 提交前必做
 
 ```bash
