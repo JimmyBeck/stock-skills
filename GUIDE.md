@@ -16,7 +16,7 @@
 
 对你的 agent 说：
 
-> 帮我安装这个 skill：https://github.com/（项目地址）
+> 帮我安装这个 skill：[https://github.com/（项目地址）](https://github.com/JimmyBeck/stock-skills/)
 
 装好后说：
 
